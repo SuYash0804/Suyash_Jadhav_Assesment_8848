@@ -8,7 +8,7 @@ const private_routes = [
         element: UserList
     },
     {
-        path: "/user_profile/",
+        path: "/user_profile/:params",
         element: UserProfile
     }, 
 ]

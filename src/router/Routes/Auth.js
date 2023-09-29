@@ -1,6 +1,5 @@
-import { lazy } from "react"
+import Login from "../../views/Auth/Login"
 
-const Login = lazy(() => import('../../views/Auth/Login'))
 
 const auth_routes = [
     {

@@ -1,7 +1,6 @@
-import { lazy } from "react"
+import UserList from "../../views/Private/UserList"
+import UserProfile from "../../views/Private/UserProfile"
 
-const UserList = lazy(() => import('../../views/Private/UserList'))
-const UserProfile = lazy(() => import('../../views/Private/UserProfile'))
 
 const private_routes = [
     {

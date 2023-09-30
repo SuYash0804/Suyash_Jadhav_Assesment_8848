@@ -11,6 +11,8 @@ const UserProfile = () => {
 
   const [isEdit, setIsEdit] = useState(false)
 
+  const [isValid, setIsValid] = useState(true)
+
   const [userData, setUserData] = useState({
     name1: "",
     age: "",
@@ -59,63 +61,79 @@ const UserProfile = () => {
             if (!isEdit) {
               setIsEdit(true)
             } else {
-              setShowProfile(false)
-              const url = new URL(`https://assignment.8848digitalerp.com/api/resource/Assignment/${params}`)
-              const form_data = new FormData()
-
-              Object.entries(userData).forEach(([key, value]) => {
-                form_data.append(key, value)
+              const validityArray = []
+              Object.values(userData).forEach((value) => {
+                validityArray.push(value)
               })
+              if (!validityArray.includes("")) {
+                setIsValid(false)
+                setShowProfile(false)
+                const url = new URL(`https://assignment.8848digitalerp.com/api/resource/Assignment/${params}`)
+                const form_data = new FormData()
 
-              axios({
-                method: "PUT",
-                url,
-                data: form_data,
-                headers: {
-                  Authorization: JSON.parse(localStorage.getItem("authentication")).access_token
-                }
-              })
-                .then((data) => {
-                  if (data.status === 200) {
-                    const { name1, age, gender, company_name } = data.data.data
-                    setUserData({ name1, age, gender, company_name })
-                  } else {
-                    toast.error("There was an error updating your data")
+                Object.entries(userData).forEach(([key, value]) => {
+                  form_data.append(key, value)
+                })
+
+                axios({
+                  method: "PUT",
+                  url,
+                  data: form_data,
+                  headers: {
+                    Authorization: JSON.parse(localStorage.getItem("authentication")).access_token
                   }
-                  setIsEdit(false)
-                  setShowProfile(true)
                 })
-                .catch((error) => {
-                  alert(error)
-                })
+                  .then((data) => {
+                    if (data.status === 200) {
+                      const { name1, age, gender, company_name } = data.data.data
+                      setUserData({ name1, age, gender, company_name })
+                    } else {
+                      toast.error("There was an error updating your data")
+                    }
+                    setIsEdit(false)
+                    setShowProfile(true)
+                  })
+                  .catch((error) => {
+                    alert(error)
+                  })
+              } else {
+                setIsValid(false)
+              }
             }
           }} className="position-absolute btn" style={{ inset: "0px 0px auto auto", outline: "none", border: "none" }}>{!isEdit ? <Edit size={15} /> : <Check size={15} />}</button>
           <CardBody>
             <img width={"75px"} src="https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg" alt="" className="d-block m-auto rounded-circle border mb-4" />
-            <div className="d-flex align-items-center mb-4">
+            <div className="d-flex align-items-center">
               <h6 className="fw-bolder w-50 m-0">Name: </h6>
-              <div className="w-50 d-flex align-items-center gap-2">
-                {!isEdit ? <p className='m-0'>{userData.name1}</p> : <input onChange={handleDetailChange} value={userData.name1} name='name' type="text" className="form-control" />}
+              <div className={`w-50 gap-2`}>
+                {!isEdit ? <p className='m-0'>{userData.name1}</p> : <input onChange={handleDetailChange} value={userData.name1} name='name1' type="text" className="form-control" />}
               </div>
             </div>
-            <div className="d-flex align-items-center mb-4">
+            {isEdit && !isValid && userData.name1 === "" && <span style={{ fontSize: "12px" }} className='text-danger ms-auto w-50 d-block'>Fill out this field before submitting</span>}
+            <div className="mb-4"></div>
+            <div className="d-flex align-items-center">
               <h6 className="fw-bolder w-50 m-0">Age: </h6>
-              <div className="w-50 d-flex align-items-center gap-2">
+              <div className={`w-50 gap-2`}>
                 {!isEdit ? <p className='m-0'>{userData.age}</p> : <input onChange={handleDetailChange} value={userData.age} name='age' type="text" className="form-control" />}
               </div>
             </div>
-            <div className="d-flex align-items-center mb-4">
+            {isEdit && !isValid && userData.age === "" && <span style={{ fontSize: "12px" }} className='text-danger ms-auto w-50 d-block'>Fill out this field before submitting</span>}
+            <div className="mb-4"></div>
+            <div className="d-flex align-items-center">
               <h6 className="fw-bolder w-50 m-0">Gender: </h6>
-              <div className="w-50 d-flex align-items-center gap-2">
+              <div className={`w-50 gap-2`}>
                 {!isEdit ? <p className='m-0'>{userData.gender}</p> : <input onChange={handleDetailChange} value={userData.gender} name='gender' type="text" className="form-control" />}
               </div>
             </div>
-            <div className="d-flex align-items-center mb-4">
+            {isEdit && !isValid && userData.gender === "" && <span style={{ fontSize: "12px" }} className='text-danger ms-auto w-50 d-block'>Fill out this field before submitting</span>}
+            <div className="mb-4"></div>
+            <div className="d-flex align-items-center">
               <h6 className="fw-bolder w-50 m-0">Company Name: </h6>
-              <div className="w-50 d-flex align-items-center gap-2">
+              <div className={`w-50 gap-2`}>
                 {!isEdit ? <p className='m-0'>{userData.company_name}</p> : <input onChange={handleDetailChange} value={userData.company_name} name='company_name' type="text" className="form-control" />}
               </div>
             </div>
+            {isEdit && !isValid && userData.company_name === "" && <span style={{ fontSize: "12px" }} className='text-danger ms-auto w-50 d-block'>Fill out this field before submitting</span>}
           </CardBody>
         </Card>
       ) : (

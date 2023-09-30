@@ -2,13 +2,16 @@
 import { Toaster } from 'react-hot-toast'
 import './App.css'
 import Router from './router/Router'
+import ContextWrapper from './Helper/ContextWrapper'
 
 function App() {
 
   return (
     <>
-      <Router />
-      <Toaster />
+      <ContextWrapper>
+        <Router />
+        <Toaster />
+      </ContextWrapper>
     </>
   )
 }

@@ -1,9 +1,13 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Eye, EyeOff } from 'react-feather'
 import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
+import { UserContext } from '../../Helper/Context'
 
 const Login = () => {
+    const {contextState, setContextState} = useContext(UserContext)
+    const navigate = useNavigate()
     const [showPass, setShowPass] = useState(false)
 
     const [cred, setCred] = useState({ usr: "", pwd: "" })
@@ -30,9 +34,16 @@ const Login = () => {
             url,
             data: form_data
         }).then(data => {
-            console.log({data})
             if (data.data.message.msg === "error") {
                 toast.error(data.data.message.error)
+            } else if (data.data.message.msg === "success") {
+                const authentication = {
+                    authenticated: true,
+                    ...data.data.message.data
+                }
+                localStorage.setItem("authentication", JSON.stringify(authentication))
+                setContextState({...contextState, authenticated: true})
+                navigate("/user_list/")
             }
         }).catch(err => {
             alert(err)
